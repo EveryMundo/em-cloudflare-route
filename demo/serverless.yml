@@ -1,0 +1,11 @@
+name: demo
+stage: dev
+plugins:
+   - serverless-dotenv-plugin
+demo:
+  #component: '@everymundo/em-cloudflare-route@0.0.0'
+  component: '../'
+  inputs:
+      routePatternPostfix: /*
+      workerName: geoip
+    
