@@ -1,6 +1,6 @@
 {
-  "name": "@everymundo/em-cloudflare-dns",
-  "version": "0.0.2",
+  "name": "@everymundo/em-cloudflare-route",
+  "version": "0.0.0",
   "author": "",
   "main": "serverless.js",
   "publishConfig": {
@@ -20,12 +20,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/EveryMundo/em-cloudflare-dns.git"
+    "url": "https://github.com/EveryMundo/em-cloudflare-route.git"
   },
   "keywords": [
     "serverless component",
     "cloudflare",
-    "workers",
-    "dns"
+    "route"
   ]
 }
