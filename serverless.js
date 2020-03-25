@@ -5,7 +5,8 @@ class CloudflareRoute extends Component {
   async default(inputs = {}) {
     const EMAIL = process.env.CF_EMAIL;
     const API_KEY = process.env.CF_KEY;
-    const { routePatternPostfix, workerName} = inputs;
+    const { routePattern, workerName, zone } = inputs;
+
     this.context.debug(`Starting CloudflareRoute Component.`);
     this.context.debug(`Finding DNS zone`);
     const cf = cloudflare({ email:EMAIL, key:API_KEY });
@@ -16,25 +17,20 @@ class CloudflareRoute extends Component {
     if (!this.state.zoneId) {
       throw new Error(`"${zone}" not found`);
     }
-
-    const routePattern = `${recordName}${routePatternPostfix}`;  
+   
     const routes = await cf.enterpriseZoneWorkersRoutes.browse(this.state.zoneId);
     const route = routes.result.find( route => route.pattern === routePattern);    
-    this.state.routeId = route && route.id; 
-    console.log("route 1", route);
-
+    this.state.routeId = route && route.id;   
     if (!this.state.routeId) {
       this.context.debug(`Creating route : ${routePattern}`);
       const route = await cf.enterpriseZoneWorkersRoutes.add(this.state.zoneId, {
         pattern:routePattern,
         script:workerName
       });
-      route && (this.state.routeId = route.result.id);
-      console.log("route 2", route);
+      route && (this.state.routeId = route.result.id);    
     } 
     else {
       const { result } = await cf.enterpriseZoneWorkersRoutes.read( this.state.zoneId, this.state.routeId );
-      console.log("route 3", result);
       if (result.pattern === routePattern && result.script === workerName)
       {
         this.context.debug(`Skipping unchanged route: ${routePattern}`);        
@@ -54,20 +50,19 @@ class CloudflareRoute extends Component {
   async remove() {
     const EMAIL = process.env.CF_EMAIL;
     const API_KEY = process.env.CF_KEY;
-    this.context.debug(`Removing DNS Record`);
+    this.context.debug(`Removing route`);
     const cf = cloudflare({ email:EMAIL, key:API_KEY });
     if (!this.state.zoneId) {
       throw new Error(`No zone found`);
     }    
-    if (!this.state.recordId) {
-      throw new Error(`No record found`);
+    if (!this.state.routeId) {
+      throw new Error(`No route found`);
     }
 
-    await cf.dnsRecords.del(this.state.zoneId, this.state.recordId);
-    delete this.state.zoneId;
-    delete this.state.recordId;
+    await cf.enterpriseZoneWorkersRoutes.del(this.state.zoneId, this.state.routeId);
+    delete this.state.routeId;
     await this.save();
     return {};
   }
 }
-module.exports = CloudflareDNS;
+module.exports = CloudflareRoute;

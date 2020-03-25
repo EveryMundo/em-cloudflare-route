@@ -6,6 +6,7 @@ demo:
   #component: '@everymundo/em-cloudflare-route@0.0.0'
   component: '../'
   inputs:
-      routePatternPostfix: /*
+      zone: everymundo.net
+      routePattern: erlin-dev.everymundo.net/*     
       workerName: geoip
     
