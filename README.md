@@ -54,7 +54,6 @@ demo:
   component: '../'
   inputs:
       routeName: al-dev.com
-      routePatternPostfix: /*
       workerName: geoip
     
         
