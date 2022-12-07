@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "serverless-dotenv-plugin": "^2.1.1",
-    "serverless": "^1.65.0"
+    "serverless": "^3.25.1"
   },
   "repository": {
     "type": "git",
